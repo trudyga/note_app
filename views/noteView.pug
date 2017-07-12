@@ -1,0 +1,19 @@
+extend layout
+
+block content
+    include header.pug
+    -var editHref = '/notes/edit?key=' + note.key;
+    -var deleteHref = '/notes/destroy?key=' + note.key;
+
+    h3=note.title
+    br
+    pre=note.body
+    p Key: #{note.key}
+    if note.key
+        hr
+        p
+            a(href=deleteHref) Delete
+            i  |
+            a(href=editHref) Edit
+
+    include footer.pug

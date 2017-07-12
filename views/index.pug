@@ -1,0 +1,16 @@
+extends layout
+
+mixin note-mixin(note)
+    - var noteRef = "/notes/view?key=" + note.key;
+    li #{note.key}:
+        a(href=noteRef) #{note.title}
+
+block content
+    h1= title
+    include header.pug
+    block title
+    - if(notelist.length > 0)
+        ul
+            for note in notelist
+                +note-mixin(note)
+    include footer.pug

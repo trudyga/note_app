@@ -1,0 +1,21 @@
+extends layout.pug
+
+block content
+    - var action = docreate ? 'create': 'update';
+    - var title = note ? note.title : "";
+    - var key = note ? notekey : "";
+    - var body = note ? note.body: "";
+
+    form(method="POST" action='/notes/save')
+        input(type='hidden' name='docreate' value=action)
+        p Key:
+            if(action === 'create')
+                input(type='text' name='notekey' value="")
+            else
+                input(type='hidden' name='notekey' value=key)
+        p Title:
+            input(type='text' name='title' value=title)
+        br
+        textarea(rows=5 cols=40 name='body') #{note ? note.body : ''}
+        br
+        input(type='submit' value='Submit')

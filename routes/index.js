@@ -1,6 +1,10 @@
 var express = require('express');
 var router = express.Router();
-let notes = require('../modules/notes-memory');
+const path = require('path');
+let notes = require(process.env.NOTES_MODEL ?
+  path.join('..', process.env.NOTES_MODEL):
+  '../models/notes-memory');
+
 
 /* GET home page. */
 router.get('/', function (req, res, next) {

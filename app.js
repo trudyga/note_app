@@ -2,6 +2,9 @@ var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
+const fs = require('fs');
+const rfs = require('rotating-file-stream');
+const debug = require('debug')('note-app:app');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
@@ -16,7 +19,27 @@ app.set('view engine', 'pug');
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
-app.use(logger('dev'));
+debug(process.env.REQUEST_LOG_FILE);
+if (process.env.REQUEST_LOG_FILE) {
+    let logDirectory = path.join(__dirname, 'log');
+    let filename = path.normalize(process.env.REQUEST_LOG_FILE);
+    debug(`Log file: ${filename}`);
+    // ensure log dir exists
+    fs.existsSync(logDirectory) || fs.mkdirSync(logDirectory);
+
+    let accessLogStream = rfs(process.env.REQUEST_LOG_FILE, {
+        interval: '1d',
+        path: logDirectory
+    });
+    debug("Create rotation file logger");
+    app.use(logger(process.env.REQUEST_LOG_FORMAT ||
+      'common', {stream: accessLogStream}));
+}
+else {
+    app.use(logger('dev'));
+}
+debug("This is message from app");
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());

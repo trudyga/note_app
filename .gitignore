@@ -1,2 +1,5 @@
-# Created by .ignore support plugin (hsz.mobi)
-/node_modules
+log/
+node_modules/
+notes-fs-data/
+public/images/
+public/javascript/

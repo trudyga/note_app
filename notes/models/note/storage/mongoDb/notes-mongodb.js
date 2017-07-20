@@ -5,7 +5,7 @@ const mongodb = require('mongodb');
 const MongoClient = require('mongodb').MongoClient;
 const log = require('debug')('notes:mongodb-model');
 const error = require('debug')('notes:error');
-const Note = require('./Note');
+const Note = require('../../Note');
 
 let db;
 

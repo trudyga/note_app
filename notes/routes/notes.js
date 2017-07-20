@@ -3,9 +3,7 @@ const util = require('util');
 const router = new express.Router();
 const path = require('path');
 // let notes = require('../models/notes-memory');
-let notes = require(process.env.NOTES_MODEL ?
-  path.join('..', process.env.NOTES_MODEL):
-  '../models/notes-memory');
+let notes = require('../models/note/storage');
 let debug = require('debug')('note-app:routes:notes');
 
 // get add note view

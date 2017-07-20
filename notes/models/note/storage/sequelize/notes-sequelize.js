@@ -5,7 +5,7 @@ const jsyaml = require('js-yaml');
 const Sequelize = require('sequelize');
 const log = require('debug')('notes:sequelize-model');
 const error = require('debug')('notes:error');
-const Note = require('./Note');
+const Note = require('../../Note');
 
 exports.connectDb = function () {
     let SQNote;

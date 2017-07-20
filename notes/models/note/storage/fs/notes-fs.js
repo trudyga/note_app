@@ -6,7 +6,7 @@ const util = require('util');
 
 const log = require('debug')('notes:fs-model');
 
-const Note = require('./Note');
+const Note = require('../../Note');
 
 module.exports.update = module.exports.create = function(key, title, body) {
     return notesDir().then(notesdir => {
@@ -79,7 +79,7 @@ module.exports.count = function() {
 };
 
 function notesDir() {
-    const dir = process.env.NOTES_FS_DIR || 'notes-fs-data';
+    let dir = path.join(__dirname, process.env.NOTES_FS_DIR || 'notes-fs-data');
     return new Promise((resolve, reject) => {
         ensureDir(dir).then(() => {
             resolve(dir);

@@ -1,7 +1,7 @@
 'use strict';
 
 let notes = [];
-const Note = require('./Note');
+const Note = require('../../Note');
 
 exports.update = exports.create = function(key, title, body) {
   return new Promise((resolve, reject) => {

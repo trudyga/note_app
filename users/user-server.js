@@ -2,9 +2,12 @@
 
 const restify = require('restify');
 const util = require('util');
+const fs = require('fs');
+const jsYaml = require('js-yaml');
 const log = require('debug')('users:server');
 const error = require('debug')('users:error');
 const usersModel = require('./users-sequelize');
+const config = require('./config');
 
 let server = restify.createServer({
     name: "User-Auth_Service",
@@ -118,25 +121,28 @@ let apiKeys = [{
 
 function check(req, res, next) {
     if (req.authorization) {
-        let found = false;
-        for (let auth of apiKeys) {
-            if (auth.key === req.authorization.basic.password
-            && auth.user === req.authorization.basic.username) {
-                found = true;
-                break;
-            }
-        }
-        if (found) next();
-        else {
-            res.send(401, new Error("Not authenticated"));
-            error('Failed authentication check' +
-              util.inspect(req.authorization));
-            next(false);
-        }
+        config.getUsers()
+            .then(users =>
+                users.some(user =>
+                    user.key == req.authorization.basic.password &&
+                    user.name == req.authorization.basic.username)
+            )
+            .then(isAuthenticated => {
+                if (isAuthenticated) next();
+                else {
+                    res.send(401, new Error("Not authenticated"));
+                    error('Failed authentication check' +
+                        util.inspect(req.authorization));
+                    next(false);
+                }
+            }).catch(err => {
+                res.send(500, new Error('Api config check failed'));
+                error(err.stack);
+                next(false);
+        })
     } else {
         res.send(500, new Error('No Authentication Key'));
         error('NO AUTHORIZATION');
         next(false);
     }
 }
-

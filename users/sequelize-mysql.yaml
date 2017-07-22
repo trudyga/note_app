@@ -1,6 +1,6 @@
 dbname: users
-username:
-password:
+username: notes-admin
+password: 172539You
 params:
   dialect: mysql
   host: localhost

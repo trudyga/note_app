@@ -1,8 +1,21 @@
 //
    Created by trudy on 7/10/2017.
-header
+header.page-header
     h1=title
     div.navbar
-        p
-            a(href='/').navbar-item Home
-            a(href='/notes/add').navbar-item Add note
+        if(user && !hideAddNote)
+            a.btn.btn-primary(href='/notes/add') Add note
+        if(user)
+            a.btn.btn-primary(href='/users/logout') Log Out
+                span.badge=user.id
+        else
+            a.btn.btn-primary(href='/users/login') Log in
+
+        if(breadcrumbs)
+            ol.breadcrumb
+                each crumb in breadcrumbs
+                    if(crumb.active)
+                        li.active=crumb.text
+                    else
+                        li
+                            a(href=crumb.href)=crumb.text

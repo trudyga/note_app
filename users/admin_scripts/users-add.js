@@ -5,12 +5,12 @@ const config = require('../config');
 const restify = require('restify');
 
 let client = restify.createJsonClient({
-    url: 'http://localhost:'+process.env.PORT,
+    url: 'http://localhost:'+process.env.PORT || '3333',
     version: '*'
 });
 
 
-config.getUser('notes_app', '../config/api-config.yaml')
+config.getUser('users-admin', '../config/api-config.yaml')
     .then(user => {
         if (!user) throw new Error("User is not defined: " + user.name);
 

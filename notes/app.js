@@ -7,9 +7,12 @@ const rfs = require('rotating-file-stream');
 const debug = require('debug')('note-app:app');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+const session = require('express-session');
+const FileStore = require('session-file-store')(session);
 
 var index = require('./routes/index');
 let notes = require('./routes/notes');
+let users = require('./routes/users');
 
 var app = express();
 
@@ -44,9 +47,25 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+// enable session support
+app.use(session({
+    store: new FileStore({path: 'sessions'}),
+    secret: 'keyboard mouse',
+    saveUninitialized: true,
+    resave: true
+}));
+users.initPassport(app);
+
+//configure vendors
+app.use('/vendor/bootstrap', express.static(
+  path.join(__dirname, 'node_modules', 'bootstrap', 'dist')));
+app.use('/vendor/jquery', express.static(
+  path.join(__dirname, 'node_modules', 'jquery', 'dist')));
+
 
 app.use('/', index);
 app.use('/notes', notes);
+app.use('/users', users.router);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -62,8 +81,7 @@ app.use(function(err, req, res, next) {
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
   // render the error page
-  res.status(err.status || 500);
-  res.render('error');
+  res.status(err.status || 500).render('error');
 });
 
 module.exports = app;

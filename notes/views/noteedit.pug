@@ -6,16 +6,24 @@ block content
     - var key = note ? notekey : "";
     - var body = note ? note.body: "";
 
-    form(method="POST" action='/notes/save')
-        input(type='hidden' name='docreate' value=action)
-        p Key:
-            if(action === 'create')
-                input(type='text' name='notekey' value="")
-            else
-                input(type='hidden' name='notekey' value=key)
-        p Title:
-            input(type='text' name='title' value=title)
-        br
-        textarea(rows=5 cols=40 name='body') #{note ? note.body : ''}
-        br
-        input(type='submit' value='Submit')
+    div.row
+        div.col-xs-12
+            form(method='POST' action='/notes/save')
+                input(type='hidden' name='docreate' value=action)
+
+                div.form-group
+                    label(for='notekey') Key
+                    if (docreate)
+                        input.form-control(type='text' id='notekey' name='notekey' value=key)
+                    else
+                        input.form-control(type='hidden' id='notekey' name='notekey' value=key)
+
+                div.form-group
+                    label(for='title') Title
+                    input.form-control(type='text' id='title' name='title' placeholder='note title'
+                    value=title)
+
+                div.form-group
+                    textarea.form-control(name='body' rows='5')=body
+
+                button.btn.btn-default(type='submit') Submit

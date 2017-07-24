@@ -22,7 +22,14 @@ router.get('/', function (req, res, next) {
     })
     .then(notelist => {
       "use strict";
-      res.render('index.pug', {title: 'Notes', notelist: notelist});
+      res.render('index.pug', {
+          title: 'Notes',
+          notelist: notelist,
+          user: req.user ? req.user : undefined,
+          breadcrumbs: [
+              { href: '/', text: 'Home'}
+          ]
+      });
     })
     .catch(err =>{ console.error(err); next(err);});
 });

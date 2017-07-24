@@ -4,26 +4,35 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "start-fs": "set REQUEST_LOG_FORMAT=common&set REQUEST_LOG_FILE=access.log&set NOTES_MODEL=FS&set DEBUG=note-app:*&npm run start",
-    "start-sequelize-mysql": "set REQUEST_LOG_FORMAT=common&set REQUEST_LOG_FILE=access.log&set NOTES_MODEL=MYSQL&set SEQUELIZE_CONNECT=models/note/storage/sequelize/sequelize-mysql.yaml&set DEBUG=note-app:*&npm run start",
+    "start-fs": "set REQUEST_LOG_FORMAT=common&set REQUEST_LOG_FILE=access.log&set NOTES_MODEL=FS& set USERS_MODEL=models/users-rest& set USER_SERVICE_URL=http://localhost:3333/& set DEBUG=note-app:*&npm run start",
+    "start-sequelize-mysql": "set REQUEST_LOG_FORMAT=common&set REQUEST_LOG_FILE=access.log&set NOTES_MODEL=MYSQL&set SEQUELIZE_CONNECT=models/note/storage/sequelize/sequelize-mysql.yaml& set USERS_MODEL=models/users-rest& set USER_SERVICE_URL=http://localhost:3333/&set DEBUG=note-app:*&npm run start",
     "start-mongodb": "set REQUEST_LOG_FORMAT=common&set REQUEST_LOG_FILE=access.log&set NOTES_MODEL=MONGO_DB&set MONGO_URL=mongodb://localhost/chap07&set DEBUG=note-app:*&npm run start",
     "debug": "set REQUEST_LOG_FORMAT=common&&set REQUEST_LOG_FILE=access.log&&set NOTES_MODEL=models/note/snpmtorage/notes-fs&&set DEBUG=note-app:* & npm run start",
     "enable-file-logging": "set REQUEST_LOG_FORMAT=common&&set REQUEST_LOG_FILE=access.log"
   },
   "dependencies": {
     "body-parser": "~1.17.1",
+    "bootstrap": "^3.3.7",
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.3",
     "express": "~4.15.2",
+    "express-session": "^1.15.4",
     "jade": "~1.11.0",
+    "jquery": "^3.2.1",
     "js-yaml": "^3.9.0",
     "mongodb": "^2.2.30",
     "morgan": "~1.8.1",
     "mysql": "^2.13.0",
+    "passport": "^0.3.2",
+    "passport-local": "^1.0.0",
+    "passport-twitter": "^1.0.4",
     "pug": "^2.0.0-rc.2",
+    "restify": "^4.3.1",
     "rotating-file-stream": "^1.2.2",
     "sequelize": "^3.30.4",
     "serve-favicon": "~2.4.2",
+    "session-file-store": "^1.0.0",
     "sqlite3": "^3.1.8"
-  }
+  },
+  "devDependencies": {}
 }

@@ -1,5 +1,5 @@
 dbname: users
-username: notes-admin
+username: users-admin
 password: 172539You
 params:
   dialect: mysql

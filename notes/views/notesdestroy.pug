@@ -1,0 +1,17 @@
+extends layout
+
+block content
+    div.row
+        div.col-xs-12
+            if (user)
+                -var viewHref= '/notes/view?key='+notekey;
+                -var destroyHref = '/notes/destroy/confirm?key='+notekey;
+                form(method='POST' action='/notes/destroy/confirm')
+                    input.form-control(type='hidden' name='notekey' value= note ? note.key: '')
+
+                    p Delete #{note.title}
+                    br
+                    input.form-control(type='submit' value='DELETE')
+
+            else
+                include not-logged-in

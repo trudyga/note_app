@@ -59,6 +59,21 @@ server.post('/find-or-create', (req, res, next) => {
       });
 });
 
+server.post('/update-user/:username', (res, req, next) => {
+    usersModel.update(req.params.username, req.params.password, req.params.provider,
+      req.params.lastName, req.params.givenName, req.params.middleName, req.params.emails,
+      req.params.photos)
+      .then(user => {
+          if (!user) {
+              res.send(404, new Error("Did not find " + req.params.username));
+          } else {
+              res.send(user);
+          }
+          next(false);
+
+      });
+});
+
 server.get('/find/:username', (req, res, next) => {
     usersModel.find(req.params.username)
       .then(user => {
@@ -86,7 +101,11 @@ server.del('/destroy/:username', (req, res, next) => {
 
 server.post('/passwordCheck', (req, res, next) => {
     usersModel.userPasswordCheck(req.params.username, req.params.password)
-      .then(check => {res.send(check); next(false);})
+      .then(check => {
+          log(check);
+          res.send(check);
+          next(false);
+      })
       .catch(err => {
           res.send(500, err);
           error(err.stack);
@@ -108,16 +127,13 @@ server.get('/list', (req, res, next) => {
       });
 });
 
-server.listen(process.env.PORT, "localhost", function () {
+server.on('error', ((err) => {
+    if (err) error(err);
+}));
+
+server.listen(process.env.PORT || '3333', function () {
     log(server.name + ' listening at ' + server.url);
 });
-
-// Mimic API Key authentication
-
-let apiKeys = [{
-    user: 'them',
-    key: 'D3ED43C0-VD43-DSD3-3D2O-3DFE0B3AEF'
-}];
 
 function check(req, res, next) {
     if (req.authorization) {

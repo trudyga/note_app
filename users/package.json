@@ -4,7 +4,7 @@
   "description": "User authenitfication service for notes application",
   "main": "user-server.js",
   "scripts": {
-    "start": "set DEBUG=users:*& set PORT=3333& set SEQUELIZE_CONNECT=sequelize-mysql.yaml&set API_CONFIG=config/api-config.yaml& node user-server",
+    "start": "set PORT=3333& set SEQUELIZE_CONNECT=sequelize-mysql.yaml&set API_CONFIG=config/api-config.yaml&set DEBUG=users:*& node user-server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

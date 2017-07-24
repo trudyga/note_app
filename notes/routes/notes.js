@@ -3,22 +3,28 @@ const util = require('util');
 const router = new express.Router();
 const path = require('path');
 // let notes = require('../models/notes-memory');
+const usersRouter = require('./users');
 let notes = require('../models/note/storage');
 let debug = require('debug')('note-app:routes:notes');
 
 // get add note view
-router.get('/add', (req, res, next) => {
+router.get('/add', usersRouter.ensureAuthenticated, (req, res, next) => {
     "use strict";
     res.render('noteedit.pug', {
         title: "Add a Note",
         docreate: true,
         notekey: "",
-        note: undefined
+        note: undefined,
+        breadcrumbs: [
+            { href: '/', text: 'Home'},
+            { active: true, text: 'Add Note'}
+        ],
+        hideAddNote: true
     });
 });
 
 // save note
-router.post('/save', (req, res, next) => {
+router.post('/save', usersRouter.ensureAuthenticated, (req, res, next) => {
     "use strict";
     let action = req.body.docreate;
     let key = req.body.notekey;
@@ -51,12 +57,21 @@ router.get('/view', (req, res, next) => {
         next(new Error(`Note key isn't defined`));
     else {
         notes.read(key).then(note => {
-            res.render('noteView', {note: note});
+            res.render('noteView',
+              {
+                  note: note,
+                  user: req.user ? req.user: undefined,
+                  notekey: req.query.key,
+                  breadcrumbs: [
+                      {href: '/', text: 'Home'},
+                      {active: true, text: note.title}
+                  ]
+              });
         }).catch(err => next(err));
     }
 });
 
-router.get('/edit', (req, res, next) => {
+router.get('/edit', usersRouter.ensureAuthenticated, (req, res, next) => {
     "use strict";
     let key = req.query.key;
     if (!key)
@@ -67,24 +82,42 @@ router.get('/edit', (req, res, next) => {
                 title: note ? ("Edit " + note.title) : "Add a Note",
                 docreate: false,
                 notekey: req.query.key,
-                note: note
-            })
+                note: note,
+                hideAddNote: true,
+                user: req.user ? req.user: undefined,
+                breadcrumbs: [
+                    {href: '/', text: 'Home'},
+                    {active: true, text: 'Delete Note'}
+                ]
+            });
         }).catch(err => next(err));
     }
 });
 
-router.get('/destroy', (req, res, next) => {
+router.get('/destroy', usersRouter.ensureAuthenticated, (req, res, next) => {
     "use strict";
-    let key = req.query.key;
-    if (!key)
-        next(new Error(`Note key isn't defined`));
-    else {
-        notes.destroy(key).then(key => {
-            debug(`Note ${key} successfully deleted`);
-            res.redirect('/');
-        }).catch(err => next(err));
-    }
+    notes.read(req.query.key)
+      .then(note => {
+          res.render('notesdestroy', {
+              title: note ? note.title: '',
+              notekey: req.query.key,
+              note: note,
+              user: req.user
+          });
+      })
+      .catch(err => next(err));
 });
+
+router.post('/destroy/confirm', usersRouter.ensureAuthenticated, (req, res, next) => {
+    "use strict";
+    notes.destroy(req.body.notekey)
+      .then(() => {
+        debug(`Note ${req.body.notekey} successfully deleted`);
+        res.redirect('/');
+      })
+      .catch(err => next(err));
+});
+
 
 router.use((err, req, res, next) => {
     "use strict";
@@ -93,7 +126,7 @@ router.use((err, req, res, next) => {
           message: err.message,
           error: {
               status: 500,
-              stack: null
+              stack: err.stack
           }
       });
 });

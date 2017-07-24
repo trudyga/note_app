@@ -1,0 +1,17 @@
+extends layout
+
+block content
+    div.row
+        div.col-xs-12
+            form(method='POST' action='/users/login')
+                div.form-group
+                    label(for='username') User name:
+                    input.form-control(type='text' id='username'
+                        name='username' value='' placeholder='User Name')
+
+                div.form-group
+                    label(for='password') Password:
+                    input.form-control(type='text' id='password' name='password' value=''
+                        placeholder='Password')
+
+                button.btn.btn-default(type='submit') Submit

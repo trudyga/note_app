@@ -1,13 +1,16 @@
 'use strict';
 
 const path = require('path');
+const util = require('util');
 const log = require('debug')('note-app:router-users');
 const error = require('debug')('note-app:error');
 const express = require('express');
 const router = express.Router();
 exports.router = router;
 const passport = require('passport');
-const LocalStrategy = require('passport-local').Strategy;
+const LocalStrategy = require('passport-local').Strategy,
+    TwitterStrategy = require('passport-twitter').Strategy;
+
 const usersModel = require(process.env.USERS_MODEL
     ? path.join('..', process.env.USERS_MODEL)
     : '../models/users-rest');
@@ -44,6 +47,14 @@ router.get('/logout', function(req, res, next) {
     });
 });
 
+router.get('/login/twitter', passport.authenticate('twitter'));
+
+router.get('/login/twitter/callback',
+    passport.authenticate('twitter', {failureRedirect: '/users/login'}),
+    function(req, res) {
+    res.redirect('/');
+});
+
 passport.use(new LocalStrategy(
   function(username, passport, done) {
       usersModel.userPasswordCheck(username, passport)
@@ -60,8 +71,38 @@ passport.use(new LocalStrategy(
   }
 ));
 
+passport.use(new TwitterStrategy({
+    consumerKey: 'ygrqv9xwuADLkJ75G5htRlQYN',
+    consumerSecret: 'BPhIzb75arqZ6zvESjD4pbuGJjzSbP7Qg0rmeST6srsMGCLMTy',
+    callbackURL: 'http://127.0.0.1:3000/users/login/twitter/callback'
+}, function(token, tokenSecret, profile, done) {
+    if (profile && profile.id) {
+        usersModel.findOrCreate({
+            id: profile.username,
+            password: '',
+            provider: profile.provider,
+            familyName: profile.displayName,
+            givenName: '',
+            middleName: '',
+            photos: profile.photos,
+            emails: profile.emails
+        })
+            .then(user => done(null, user))
+            .catch(err => done(err));
+    }
+    else {
+        done(null, false, 'Profile id is not defined');
+    }
+}));
+
 passport.serializeUser(function(user, done) {
-    done(null, user.username)
+    log(util.inspect(user));
+    if (!user) {
+        error(`Can't serialize user to the session`);
+        done(new Error(`Trying to serialize undefined user to session`));
+        return;
+    }
+    done(null, user.username || user.id)
 });
 
 passport.deserializeUser(function(username, done) {

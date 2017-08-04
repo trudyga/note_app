@@ -1,8 +1,8 @@
 'use strict';
 
 const path = require('path');
-const log = require('debug')('notes:router-users');
-const error = require('debug')('notes:error');
+const log = require('debug')('note-app:router-users');
+const error = require('debug')('note-app:error');
 const express = require('express');
 const router = express.Router();
 exports.router = router;

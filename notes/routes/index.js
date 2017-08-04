@@ -2,6 +2,8 @@ var express = require('express');
 var router = express.Router();
 const path = require('path');
 let notes = require('../models/note/storage');
+const log = require('debug')('note-app:router:index');
+const error = require('debug')('note-app:error');
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
@@ -31,7 +33,7 @@ router.get('/', function (req, res, next) {
           ]
       });
     })
-    .catch(err =>{ console.error(err); next(err);});
+    .catch(err =>{ error(err); next(err);});
 });
 
 module.exports = router;

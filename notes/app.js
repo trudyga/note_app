@@ -1,20 +1,21 @@
-var express = require('express');
-var path = require('path');
-var favicon = require('serve-favicon');
-var logger = require('morgan');
+const express = require('express');
+const path = require('path');
+let favicon = require('serve-favicon');
+const logger = require('morgan');
 const fs = require('fs');
 const rfs = require('rotating-file-stream');
 const debug = require('debug')('note-app:app');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
+const error = require('debug')('note-app:error');
+const bodyParser = require('body-parser');
 const session = require('express-session');
-const FileStore = require('session-file-store')(session);
+const LokiStore = require('connect-loki')(session);
 
-var index = require('./routes/index');
+
+const index = require('./routes/index');
 let notes = require('./routes/notes');
 let users = require('./routes/users');
 
-var app = express();
+const app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -45,11 +46,13 @@ debug("This is message from app");
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 // enable session support
 app.use(session({
-    store: new FileStore({path: 'sessions'}),
+    store: new LokiStore({
+        path: 'sessions/session-store.db',
+        logErrors: (err) => error(err)
+    }),
     secret: 'keyboard mouse',
     saveUninitialized: true,
     resave: true
@@ -69,7 +72,7 @@ app.use('/users', users.router);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-  var err = new Error('Not Found');
+  let err = new Error('Not Found');
   err.status = 404;
   next(err);
 });

@@ -7,6 +7,8 @@ const log = require('debug')('notes:sequelize-model');
 const error = require('debug')('notes:error');
 const Note = require('../../Note');
 
+exports.events = require('../../note-events');
+
 exports.connectDb = function () {
     let SQNote;
     let sequlz;
@@ -52,6 +54,9 @@ exports.create = function (key, title, body) {
             title: title,
             body: body
         });
+    }).then(newNote => {
+        exports.events.noteCreated(newNote);
+        return newNote;
     });
 };
 
@@ -68,6 +73,9 @@ exports.update = function (key, title, body) {
                   });
               }
           });
+    }).then(updatedNote => {
+        exports.events.noteUpdate(updatedNote);
+        return updatedNote;
     });
 };
 
@@ -94,6 +102,9 @@ exports.destroy = function (key) {
                   return note.destroy();
               }
           });
+    }).then(deletedNote => {
+        exports.events.noteDestroy(deletedNote);
+        return deletedNote;
     });
 };
 

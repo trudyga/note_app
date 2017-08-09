@@ -5,23 +5,27 @@ let notes = require('../models/note/storage');
 const log = require('debug')('note-app:router:index');
 const error = require('debug')('note-app:error');
 
+let getKeyTitlesList = function () {
+    notes.keylist()
+      .then(keylist => {
+          "use strict";
+          let keyPromises = [];
+
+          for (let key of keylist){
+              keyPromises.push(
+                notes.read(key).then(note => {
+                    return {key: note.key, title: note.title};
+                })
+              )
+          }
+
+          return Promise.all(keyPromises);
+      });
+}
+
 /* GET home page. */
 router.get('/', function (req, res, next) {
-  notes.keylist()
-    .then(keylist => {
-      "use strict";
-      let keyPromises = [];
-
-      for (let key of keylist) {
-        keyPromises.push(
-          notes.read(key).then(note => {
-            return {key:note.key, title: note.title};
-          })
-        );
-      }
-
-      return Promise.all(keyPromises);
-    })
+    getKeyTitlesList()
     .then(notelist => {
       "use strict";
       res.render('index.pug', {
@@ -35,5 +39,18 @@ router.get('/', function (req, res, next) {
     })
     .catch(err =>{ error(err); next(err);});
 });
+
+module.exports.socketio = function (io) {
+    let emitNoteTitles = () => {
+        "use strict";
+        getKeyTitlesList().then(notelist => {
+            io.of('/home').emit('notetitles', notelist);
+        });
+    };
+
+    notes.events.on('notecreated', emitNoteTitles);
+    notes.events.on('noteupdate', emitNoteTitles);
+    notes.events.on('notedestroy', emitNoteTitles);
+};
 
 module.exports = router;

@@ -5,7 +5,7 @@ const path = require('path');
 // let notes = require('../models/notes-memory');
 const usersRouter = require('./users');
 let notes = require('../models/note/storage');
-let debug = require('debug')('note-app:routes:notes');
+let log = require('debug')('note-app:routes:notes');
 
 // get add note view
 router.get('/add', usersRouter.ensureAuthenticated, (req, res, next) => {
@@ -30,7 +30,8 @@ router.post('/save', usersRouter.ensureAuthenticated, (req, res, next) => {
     let key = req.body.notekey;
     let title = req.body.title;
     let body = req.body.body;
-    debug(`Action: ${action}, key: ${key}, title: ${title}, body: ${body}`);
+    log(`Action: ${action}, key: ${key}, title: ${title}, body: ${body}`);
+    log(`Action: ${action}, key: ${key}, title: ${title}, body: ${body}`);
 
     let done;
 
@@ -112,7 +113,7 @@ router.post('/destroy/confirm', usersRouter.ensureAuthenticated, (req, res, next
     "use strict";
     notes.destroy(req.body.notekey)
       .then(() => {
-        debug(`Note ${req.body.notekey} successfully deleted`);
+        log(`Note ${req.body.notekey} successfully deleted`);
         res.redirect('/');
       })
       .catch(err => next(err));
@@ -132,3 +133,40 @@ router.use((err, req, res, next) => {
 });
 
 module.exports = router;
+
+module.exports.socketio = function (io) {
+    let viewNamespace = io.of('/view');
+    let forNoteViewClients = function (cb) {
+        viewNamespace.clients((err, clients) => {
+            "use strict";
+            if (err) throw err;
+            clients.forEach(id => {
+                cb(viewNamespace.connected[id])
+            });
+        });
+    };
+
+    notes.events.on('noteupdate', newnote => {
+        "use strict";
+        log(`Emit NOTEUPDATE event`);
+        forNoteViewClients(socket => {
+            log(`Emit NOTEUPDATE event on socket with data ${util.inspect(newnote)}`);
+            socket.emit('noteupdate', {
+                key: newnote.notekey,
+                title: newnote.title,
+                body: newnote.body
+            });
+        });
+    });
+
+    notes.events.on('notedestroy', data => {
+        "use strict";
+        log(`Emin NOTEDESTROY event`);
+        forNoteViewClients(socket => {
+            log(`Emit NOTEDESTROY event on socket with data ${util.inspect(data)}`);
+            socket.emit('notedestroy', {
+                key: data,
+            });
+        });
+    });
+};

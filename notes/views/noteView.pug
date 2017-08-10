@@ -7,11 +7,38 @@ block content
 
     div.row
         div.col-xs-12
-            h3=note.title
-            p=note? note.body: ''
-            p Key: #{note.key}
+            h3#notetitle=note.title
+            p#notebody=note? note.body: ''
+            p Key:
+                span#notekey=note.key
         if note.key
             div.row
                 div.btn-group.col-sm-12
                     a.btn.btn-default(href=deleteHref role='button') Delete
                     a.btn.btn-default(href=editHref role='button') Edit
+
+
+    if note.key
+        script(src='/socket.io/socket.io.js')
+        script.
+            var viewSocket;
+
+            $(document).ready(function () {
+                viewSocket = io('/view');
+                let notekey = $('#notekey').text();
+                viewSocket.on('noteupdate', function (newNote) {
+                    console.log(`New note: ${newNote.key}`);
+                    console.log(`Key: ${newNote.key} ${notekey}`);
+                    if (newNote.key == notekey) {
+                        $('#notetitle').empty().text(newNote.title);
+                        $('#notebody').empty().text(newNote.body);
+                    }
+                });
+                viewSocket.on('notedestroy', function (data) {
+                    console.log(`Key: ${data.key} ${notekey}`);
+                    if (data.key == notekey) {
+                        console.log("Replacing the location to the index.html");
+                        window.location.replace('/');
+                    }
+                });
+            });

@@ -102,7 +102,7 @@ exports.destroy = function (key) {
                   return note.destroy();
               }
           });
-    }).then(deletedNote => {
+    }).then(() => key).then(deletedNote => {
         exports.events.noteDestroy(deletedNote);
         return deletedNote;
     });

@@ -10,8 +10,27 @@ block content
     block title
         div.row
             div.col-xs-12
-                - if(notelist.length > 0)
-                    div.btn-group-vertical(role='group' style='width: 100%;')
+                - if(notelist && notelist.length > 0)
+                    div.btn-group-vertical#notetitles(role='group' style='width: 100%;')
                         for note in notelist
                             +note-mixin(note)
-    include footer.pug
+
+    script(src='/socket.io/socket.io.js')
+    script.
+        var socket;
+        $(document).ready(function () {
+            console.log("Page is ready");
+            socket = io('/home');
+            socket.on('notetitles', function (data) {
+                    let notelist = data;
+                console.log("Recieved notetitles event");
+                $('#notetitles').empty();
+                for (let i = 0; i < notelist.length; i++) {
+                        let notedata = notelist[i];
+                    $('#notetitles').append(
+                        '<a class="btn btn-lg btn-block btn-default" href="/notes/view?key=' + notedata.key + '">'
+                        + notedata.title + '</a>'
+                    );
+                }
+            });
+        });

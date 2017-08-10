@@ -102,9 +102,9 @@ app.use('/vendor/jquery', express.static(
 
 // configure routes
 app.use('/', index);
-// index.socketio(io);
+index.socketio(io);
 app.use('/notes', notes);
-// notes.socketio(io);
+notes.socketio(io);
 app.use('/users', users.router);
 
 // catch 404 and forward to error handler

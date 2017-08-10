@@ -6,7 +6,7 @@ const log = require('debug')('note-app:router:index');
 const error = require('debug')('note-app:error');
 
 let getKeyTitlesList = function () {
-    notes.keylist()
+    return notes.keylist()
       .then(keylist => {
           "use strict";
           let keyPromises = [];
@@ -20,14 +20,15 @@ let getKeyTitlesList = function () {
           }
 
           return Promise.all(keyPromises);
-      });
-}
+      }).catch(err => error(err));
+};
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
     getKeyTitlesList()
     .then(notelist => {
       "use strict";
+      log('Rendering the index page with notelist');
       res.render('index.pug', {
           title: 'Notes',
           notelist: notelist,
@@ -40,10 +41,13 @@ router.get('/', function (req, res, next) {
     .catch(err =>{ error(err); next(err);});
 });
 
+module.exports = router;
+
 module.exports.socketio = function (io) {
     let emitNoteTitles = () => {
         "use strict";
         getKeyTitlesList().then(notelist => {
+            log('Emit NOTETITLES event');
             io.of('/home').emit('notetitles', notelist);
         });
     };
@@ -53,4 +57,3 @@ module.exports.socketio = function (io) {
     notes.events.on('notedestroy', emitNoteTitles);
 };
 
-module.exports = router;

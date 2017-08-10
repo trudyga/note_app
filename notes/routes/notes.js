@@ -4,8 +4,11 @@ const router = new express.Router();
 const path = require('path');
 // let notes = require('../models/notes-memory');
 const usersRouter = require('./users');
-let notes = require('../models/note/storage');
-let log = require('debug')('note-app:routes:notes');
+const notes = require('../models/note/storage'),
+  messagesModel = require('../models/messages');
+
+let log = require('debug')('note-app:routes:notes'),
+    error = require('debug')('note-app:error');
 
 // get add note view
 router.get('/add', usersRouter.ensureAuthenticated, (req, res, next) => {
@@ -119,6 +122,36 @@ router.post('/destroy/confirm', usersRouter.ensureAuthenticated, (req, res, next
       .catch(err => next(err));
 });
 
+/// Routes for messages handling
+
+/**
+ * Save incoming message to message pool,
+ */
+router.post('/make-comment', usersRouter.ensureAuthenticated, (req, res, next) => {
+    "use strict";
+    let message = req.body;
+    if (!message) next(new Error("Incorrect body at /notes/make-comment, not all fields specified"));
+
+    messagesModel.postMessage(message.from, message.namespace, message.message)
+      .then(result => {res.status(200).json(result);})
+      .catch(err => { res.status(500).end(err.stack)})
+});
+
+router.post('/del-message', usersRouter.ensureAuthenticated, (req, res, next) => {
+    "use strict";
+    let msgInfo = req.body;
+    if (!msgInfo || !msgInfo.id || !msgInfo.namespace)
+        next(new Error("Incorrect body at /notes/del-message, note all fields specified"));
+
+    messagesModel.destroyMessage(msgInfo.id, msgInfo.namespace)
+      .then(destroyedMsg => {
+          res.status(200).json(destroyedMsg)
+      })
+      .catch(err => {
+          res.status(500).end(err.stack);
+      });
+});
+
 
 router.use((err, req, res, next) => {
     "use strict";
@@ -161,12 +194,38 @@ module.exports.socketio = function (io) {
 
     notes.events.on('notedestroy', data => {
         "use strict";
-        log(`Emin NOTEDESTROY event`);
+        log(`Emit NOTEDESTROY event`);
         forNoteViewClients(socket => {
             log(`Emit NOTEDESTROY event on socket with data ${util.inspect(data)}`);
             socket.emit('notedestroy', {
                 key: data,
             });
+        });
+    });
+
+    viewNamespace.on('connection', function (socket) {
+        // 'cb' is a function sent form the browser, to witch we ssend the messages for the named note.
+        socket.on('getnotemessages', (namespace, cb) => {
+            "use strict";
+            messagesModel.recentmessages(namespace)
+              .then(cb)
+              .catch(err => error(err.stack));
+        });
+    });
+
+    messagesModel.on('newmessage', newmsg => {
+        "use strict";
+        log(`Emit NEWMESSAGE event`);
+        forNoteViewClients(socket => {
+            socket.emit('newmessage', newmsg);
+        });
+    });
+
+    messagesModel.on('destroymessage', destroyedMsg => {
+        "use strict";
+        log(`Emit DESTROYMESSAGE event`);
+        forNoteViewClients(socket => {
+            socket.emit('destroymessage', destroyedMsg);
         });
     });
 };

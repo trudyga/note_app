@@ -2,10 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="5231e6a3-c630-4155-800a-c2d28a6c934e" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/notes/models/messages/index.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/notes/models/messages/messages-sequelize.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/notes/models/messages/messages-sequelize.js" afterPath="$PROJECT_DIR$/notes/models/messages/messages-sequelize.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/notes/routes/notes.js" afterPath="$PROJECT_DIR$/notes/routes/notes.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/notes/routes/users.js" afterPath="$PROJECT_DIR$/notes/routes/users.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/notes/views/noteView.pug" afterPath="$PROJECT_DIR$/notes/views/noteView.pug" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -24,38 +25,7 @@
     <favorites_list name="note_app" />
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="notes.js" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/notes/routes/notes.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="18">
-              <caret line="130" column="17" lean-forward="false" selection-start-line="130" selection-start-column="17" selection-end-line="130" selection-end-column="17" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="messages-sequelize.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/notes/models/messages/messages-sequelize.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1422">
-              <caret line="79" column="23" lean-forward="false" selection-start-line="79" selection-start-column="23" selection-end-line="79" selection-end-column="23" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="index.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/notes/models/messages/index.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="36">
-              <caret line="2" column="31" lean-forward="false" selection-start-line="2" selection-start-column="31" selection-end-line="2" selection-end-column="31" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300" />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -76,6 +46,7 @@
       <find>jsYaml</find>
       <find>res.status</find>
       <find>debug</find>
+      <find>user</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -129,17 +100,17 @@
         <option value="$PROJECT_DIR$/notes/.gitignore" />
         <option value="$PROJECT_DIR$/notes/package.json" />
         <option value="$PROJECT_DIR$/notes/views/header.pug" />
-        <option value="$PROJECT_DIR$/notes/routes/users.js" />
         <option value="$PROJECT_DIR$/notes/app.js" />
         <option value="$PROJECT_DIR$/notes/routes/index.js" />
         <option value="$PROJECT_DIR$/notes/views/headerStuff.pug" />
         <option value="$PROJECT_DIR$/notes/views/footer.pug" />
         <option value="$PROJECT_DIR$/notes/models/note/storage/sequelize/notes-sequelize.js" />
-        <option value="$PROJECT_DIR$/notes/views/noteView.pug" />
         <option value="$PROJECT_DIR$/notes/views/index.pug" />
+        <option value="$PROJECT_DIR$/notes/models/messages/index.js" />
+        <option value="$PROJECT_DIR$/notes/routes/users.js" />
         <option value="$PROJECT_DIR$/notes/models/messages/messages-sequelize.js" />
         <option value="$PROJECT_DIR$/notes/routes/notes.js" />
-        <option value="$PROJECT_DIR$/notes/models/messages/index.js" />
+        <option value="$PROJECT_DIR$/notes/views/noteView.pug" />
       </list>
     </option>
   </component>
@@ -204,6 +175,7 @@
     </navigator>
     <panes>
       <pane id="Scope" />
+      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -235,18 +207,23 @@
               <item name="notes" type="462c0819:PsiDirectoryNode" />
               <item name="routes" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="note_app" type="b2602c69:ProjectViewProjectNode" />
+              <item name="note_app" type="462c0819:PsiDirectoryNode" />
+              <item name="notes" type="462c0819:PsiDirectoryNode" />
+              <item name="views" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="nodejs_interpreter_path" value="C:/Program Files/nodejs/node" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="HbShouldOpenHtmlAsHb" value="" />
-    <property name="settings.editor.selected.configurable" value="settings.nodejs" />
+    <property name="settings.editor.selected.configurable" value="preferences.externalResources" />
     <property name="JavaScriptPreferStrict" value="true" />
     <property name="JavaScriptWeakerCompletionTypeGuess" value="true" />
     <property name="javascript.nodejs.core.library.configured.version" value="8.1.2" />
@@ -388,7 +365,8 @@
       <workItem from="1500927631385" duration="191000" />
       <workItem from="1501871752475" duration="13033000" />
       <workItem from="1502316892154" duration="10591000" />
-      <workItem from="1502401034682" duration="14000" />
+      <workItem from="1502401034682" duration="58000" />
+      <workItem from="1502529157586" duration="12105000" />
     </task>
     <task id="LOCAL-00001" summary="Session storage strategy was replaced:&#10;session-file-storage -&gt; connect-loki">
       <created>1501880698252</created>
@@ -397,11 +375,18 @@
       <option name="project" value="LOCAL" />
       <updated>1501880698252</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Messages support added">
+      <created>1502401069791</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1502401069791</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="146026000" />
+    <option name="totallyTimeSpent" value="158175000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -417,10 +402,10 @@
     <layout>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33182332" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.27457628" sideWeight="0.5169133" order="11" side_tool="true" content_ui="tabs" />
-      <window_info id="Version Control" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3280543" sideWeight="0.48942918" order="14" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32918552" sideWeight="0.48942918" order="14" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.27364865" sideWeight="0.48308668" order="13" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.14376321" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2760181" sideWeight="0.48308668" order="13" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.14363307" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="MaxCompute Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="MaxCompute Job" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="MaxCompute Job Explorer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
@@ -498,7 +483,8 @@
     <MESSAGE value="User authentication through local strategy is added." />
     <MESSAGE value="Session storage strategy was replaced:&#10;session-file-storage -&gt; connect-loki" />
     <MESSAGE value="Twitter auth strategy added.&#10;&#10;Added support for twitter authentication strategy throught passport-twitter module.&#10;Header template was changed, twitter login button was added." />
-    <option name="LAST_COMMIT_MESSAGE" value="Twitter auth strategy added.&#10;&#10;Added support for twitter authentication strategy throught passport-twitter module.&#10;Header template was changed, twitter login button was added." />
+    <MESSAGE value="Messages support added" />
+    <option name="LAST_COMMIT_MESSAGE" value="Messages support added" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -614,13 +600,6 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/notes/sessions/aoVwCoItb6CDcVTix-whj1yMsxSq5-aV.json" />
-    <entry file="file://$PROJECT_DIR$/notes/views/login.pug">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="252">
-          <caret line="14" column="20" lean-forward="false" selection-start-line="14" selection-start-column="20" selection-end-line="14" selection-end-column="20" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/users/package.json">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="72">
@@ -778,13 +757,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/notes/views/noteView.pug">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="400">
-          <caret line="39" column="29" lean-forward="false" selection-start-line="39" selection-start-column="29" selection-end-line="39" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/notes/views/index.pug">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="311">
@@ -806,34 +778,54 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/notes/routes/users.js">
+    <entry file="file://$PROJECT_DIR$/notes/views/login.pug">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="432">
-          <caret line="24" column="18" lean-forward="true" selection-start-line="24" selection-start-column="18" selection-end-line="24" selection-end-column="18" />
+        <state relative-caret-position="252">
+          <caret line="14" column="20" lean-forward="false" selection-start-line="14" selection-start-column="20" selection-end-line="14" selection-end-column="20" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/notes/models/messages/index.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="36">
-          <caret line="2" column="31" lean-forward="false" selection-start-line="2" selection-start-column="31" selection-end-line="2" selection-end-column="31" />
+          <caret line="2" column="31" lean-forward="true" selection-start-line="2" selection-start-column="31" selection-end-line="2" selection-end-column="31" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/notes/models/messages/messages-sequelize.js">
+    <entry file="file://$PROJECT_DIR$/notes/routes/users.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1422">
-          <caret line="79" column="23" lean-forward="false" selection-start-line="79" selection-start-column="23" selection-end-line="79" selection-end-column="23" />
+        <state relative-caret-position="180">
+          <caret line="40" column="2" lean-forward="true" selection-start-line="40" selection-start-column="2" selection-end-line="40" selection-end-column="2" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/notes/routes/notes.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="18">
-          <caret line="130" column="17" lean-forward="false" selection-start-line="130" selection-start-column="17" selection-end-line="130" selection-end-column="17" />
+        <state relative-caret-position="437">
+          <caret line="124" column="0" lean-forward="true" selection-start-line="124" selection-start-column="0" selection-end-line="124" selection-end-column="0" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/notes/models/messages/messages-sequelize.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="419">
+          <caret line="123" column="2" lean-forward="true" selection-start-line="123" selection-start-column="2" selection-end-line="123" selection-end-column="2" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/notes/views/noteView.pug">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="262">
+          <caret line="111" column="78" lean-forward="true" selection-start-line="111" selection-start-column="78" selection-end-line="111" selection-end-column="78" />
+          <folding>
+            <marker date="1502554152269" expanded="true" signature="5030:5041" ph="..." />
+            <marker date="1502554152269" expanded="true" signature="5113:5124" ph="..." />
+          </folding>
         </state>
       </provider>
     </entry>

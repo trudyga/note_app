@@ -103,6 +103,27 @@ module.exports.destroyMessage = function(id, namespace) {
 };
 
 /**
+ * Remove all messages from specified namespace
+ * @param namespace {String} Namespace title where all messages will be deleted
+ * @returns {Promise.<Array<String>, String>} Pair of namespace and deleted ids
+ */
+module.exports.destroyNamespace = function (namespace) {
+    let ids = [];
+    return connectDB()
+      .then(SQMessages => SQMessages.findAll({where: {namespace}}))
+      .then(msgs => {
+          "use strict";
+          msgs.forEach(msg => ids.push(msg.id));
+          return msgs;
+      })
+      .then(msgs => Promise.all(msgs.map(msg => msg.destroy())))
+      .then(() => {
+        "use strict";
+        return {ids, namespace};
+      });
+};
+
+/**
  * Returns the most recent 20 messages with given namespace
  * @param namespace
  * @returns {Promise.<TResult>}

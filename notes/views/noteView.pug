@@ -11,17 +11,43 @@ block content
             p#notebody=note? note.body: ''
             p Key:
                 span#notekey=note.key
-        if note.key
+        if note.key && user
             div.row
                 div.btn-group.col-sm-12
                     a.btn.btn-default(href=deleteHref role='button') Delete
                     a.btn.btn-default(href=editHref role='button') Edit
+                    button.btn.btn-default(type='button' data-toggle='modal' data-target='.notes-comment-modal') Comment
+            -var namespace = '/view-'+note.key;
+            div.modal.fade.notes-comment-modal(tabindex='-1' role='dialog' aria-labeledby='noteCommentModalLabel')
+                div.modal-dialog
+                    div.modal-content
+                        div.modal-header
+                            button.close(type='button' data-dismiss='modal' aria-label='close')
+                                span(aria-hiden='true') &times;
+                            h4.modal-title#noteCommentModalLabel Leave a Comment
+                        div.modal-body
+                            form#submit-comment.well(data-async data-target='#rating-modal' action='/notes/make-comment' method='POST')
+                                input(type='hidden' name='from' value=user.id)
+                                input(type='hidden' name='namespace' value=namespace)
+                                input(type='hidden' name='key' value=note.key)
+                                fieldset
+                                    div.form-group
+                                        label(for='noteCommentTextArea').
+                                            Your Excellent Thoughts, Please
+                                        textarea#noteCommentTextArea.form-control(name='message' rows='3')
 
+                                    div.form-group
+                                        div.col-sm-offset-2.com-sm-10
+                                            button#submitNewComment.btn.btn-default(type='submit') Make Comment
 
+        if user
+            div#noteMessages(style='display: none')
     if note.key
         script(src='/socket.io/socket.io.js')
         script.
             var viewSocket;
+            var user = '#{user}';
+            var note = '#{note}';
 
             $(document).ready(function () {
                 viewSocket = io('/view');
@@ -29,16 +55,100 @@ block content
                 viewSocket.on('noteupdate', function (newNote) {
                     console.log(`New note: ${newNote.key}`);
                     console.log(`Key: ${newNote.key} ${notekey}`);
-                    if (newNote.key == notekey) {
+                    if (newNote.key === notekey) {
                         $('#notetitle').empty().text(newNote.title);
                         $('#notebody').empty().text(newNote.body);
                     }
                 });
                 viewSocket.on('notedestroy', function (data) {
                     console.log(`Key: ${data.key} ${notekey}`);
-                    if (data.key == notekey) {
+                    if (data.key === notekey) {
                         console.log("Replacing the location to the index.html");
                         window.location.replace('/');
                     }
                 });
+
+                if(user) {
+                    let namespace = '/view-'+ '#{note.key}';
+                    io('/view').emit('getnotemessages', namespace, function(msgs) {
+                        console.log('RECEIVE gotnotemessages reply');
+                        let noteMessages = $('#noteMessages');
+                        noteMessages.empty();
+                        if(msgs.length > 0) {
+                            msgs.forEach(function(msg) {
+                                noteMessages.append(formatMessage(msg));
+                            });
+                            noteMessages.show();
+                            connectMsgDelButton();
+                        } else
+                            noteMessages.hide();
+                    });
+
+                    // handler for the .message-del-buttons
+                    var connectMsgDelButton = function () {
+                        $('.message-del-button').on('click', function (event) {
+                            $.post('/notes/del-message', {
+                                id: $(this).data('id'),
+                                namespace: $(this).data('namespace')
+                            }, function (response) {
+
+                            });
+                            event.preventDefault();
+                        });
+                    };
+
+                    // Emit the code to show a message, and the buttons that will sit next ot it.
+                    var formatMessage = function (msg) {
+                        return `<p id='note-message-${msg.id}' class='well'>` +
+                          `<strong>${msg.from} </strong>` +
+                          `${msg.message} <small style="float:right">${msg.timestamp}</small>` +
+                          `<button style="float:rigth" type="button" class="btn btn-primary btn-xs message-del-button" data-id=${msg.id} data-namespace="${msg.namespace}"` +
+                          `Delete</button></p>`
+                    };
+                    // Act on newmessage and destroymessage events
+                    io('/view').on('newmessage', function (newmsg) {
+                        console.log("Receive newmessage on namespace " + '#{note.key}');
+                        if (newmsg.namespace === '/view-' + '#{note.key}') {
+                            $('#noteMessages').prepend(formatMessage(newmsg));
+                            $('#noteMessages').show();
+                            connectMsgDelButton();
+                        }
+                    });
+
+                    io('/view').on('destroymessage', function(data) {
+                        console.log("Receive destroymessage on namespace " + '#{note.key}');
+                        if (data.namespace === '/view-' + '#{note.key}'){
+                            console.log("Destroy message with id " + data.id);
+                            $('#note-message-' + data.id).remove();
+                        }
+                    });
+
+                    // handle form submission for the comment form
+                    $('form#submit-comment').submit(function (event) {
+                        // avort any pending request
+                        if (request) { request.abort(); }
+
+                        let $form = $('form#submit-comment');
+                        let $target = $($form.attr('data-target'));
+
+                        var request = $.ajax({
+                            type: $form.attr('method'),
+                            url: $form.attr('action'),
+                            data: $form.serialize()
+                        });
+
+                        request.done(function (response, textStatus, jqXHR) {
+
+                        });
+
+                        request.fail(function (jqXHR, textStatus, errorThrown) {
+                            alert("ERROR " + jqXHR.responseText);
+                        });
+                        request.always(function () {
+                            $('.notes-comment-modal').modal('hide');
+                        });
+
+                        event.preventDefault();
+                    });
+                }
             });

@@ -115,6 +115,7 @@ router.get('/destroy', usersRouter.ensureAuthenticated, (req, res, next) => {
 router.post('/destroy/confirm', usersRouter.ensureAuthenticated, (req, res, next) => {
     "use strict";
     notes.destroy(req.body.notekey)
+      .then(() => messagesModel.destroyNamespace('/view-'+req.body.notekey))
       .then(() => {
         log(`Note ${req.body.notekey} successfully deleted`);
         res.redirect('/');
@@ -150,6 +151,22 @@ router.post('/del-message', usersRouter.ensureAuthenticated, (req, res, next) =>
       .catch(err => {
           res.status(500).end(err.stack);
       });
+});
+
+router.get('/recent-messages', usersRouter.ensureAuthenticated, (req, res, next) => {
+    "use strict";
+    if (req && req.query.namespace)
+    {
+        log('Receive recent messages for ' + req.query.namespace + ' namespace');
+        messagesModel.recentMessages(req.query.namespace).then(messages => {
+            res.status(200).json(messages)
+        }).catch(err => {
+            error(err.stack);
+            next(err);
+        });
+    }
+    else
+        res.status(400).send("Namespace property wasn't specified");
 });
 
 
@@ -207,7 +224,7 @@ module.exports.socketio = function (io) {
         // 'cb' is a function sent form the browser, to witch we ssend the messages for the named note.
         socket.on('getnotemessages', (namespace, cb) => {
             "use strict";
-            messagesModel.recentmessages(namespace)
+            messagesModel.recentMessages(namespace)
               .then(cb)
               .catch(err => error(err.stack));
         });

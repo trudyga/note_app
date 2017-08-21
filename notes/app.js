@@ -11,12 +11,14 @@ const passportSocketIo = require('passport.socketio'),
   log = require('debug')('note-app:server'),
   error = require('debug')('note-app:error');
 
+const sessionDir = process.env.NOTES_SESSIONS_DIR ?
+    process.env.NOTES_SESSIONS_DIR: "sessions";
 const session = require('express-session'),
   LokiStore = require('connect-loki')(session),
   sessionCookie = 'notes.sid',
   sessionSecret ='keyboard mouse',
   sessionStore = new LokiStore({
-      path: './sessions/session-store.db'
+      path: sessionDir + "/session-store.db"
   });
 
 const express = require('express'),

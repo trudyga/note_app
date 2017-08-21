@@ -3,12 +3,15 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./app.js",
-    "start-fs": "set REQUEST_LOG_FORMAT=common&set REQUEST_LOG_FILE=access.log&set NOTES_MODEL=FS& set USERS_MODEL=models/users-rest& set USER_SERVICE_URL=http://localhost:3333/& set DEBUG=note-app:*&npm run start",
-    "start-sequelize-mysql": "set REQUEST_LOG_FORMAT=common&set REQUEST_LOG_FILE=access.log&set NOTES_MODEL=MYSQL&set SEQUELIZE_CONNECT=models/note/storage/sequelize/sequelize-mysql.yaml& set USERS_MODEL=models/users-rest& set USER_SERVICE_URL=http://localhost:3333/&set DEBUG=note-app:*&npm run start",
-    "start-mongodb": "set REQUEST_LOG_FORMAT=common&set REQUEST_LOG_FILE=access.log&set NOTES_MODEL=MONGO_DB&set MONGO_URL=mongodb://localhost/chap07&set DEBUG=note-app:*&npm run start",
-    "debug": "set REQUEST_LOG_FORMAT=common&&set REQUEST_LOG_FILE=access.log&&set NOTES_MODEL=models/note/snpmtorage/notes-fs&&set DEBUG=note-app:* & npm run start",
-    "enable-file-logging": "set REQUEST_LOG_FORMAT=common&&set REQUEST_LOG_FILE=access.log"
+    "docker": "node ./app.js",
+    "start": "set REQUEST_LOG_FORMAT=common&set  REQUEST_LOG_FILE=access.log&set NOTES_MODEL=MYSQL&set  SEQUELIZE_CONNECT=models/note/storage/sequelize/sequelize-mysql.yaml&set USERS_MODEL=models/users-rest&set USER_SERVICE_URL=http://localhost:3333/&set DEBUG=note-app:*&set NOTES_MODEL&npm run bin",
+    "bin": "node ./app.js",
+    "start-fs": "set REQUEST_LOG_FORMAT=common&set REQUEST_LOG_FILE=access.log&set NOTES_MODEL=FS& set USERS_MODEL=models/users-rest& set USER_SERVICE_URL=http://localhost:3333/& set DEBUG=note-app:*&npm run bin",
+    "start-sequelize-mysql": "set REQUEST_LOG_FORMAT=common&set REQUEST_LOG_FILE=access.log&set NOTES_MODEL=MYSQL&set SEQUELIZE_CONNECT=models/note/storage/sequelize/sequelize-mysql.yaml& set USERS_MODEL=models/users-rest& set USER_SERVICE_URL=http://localhost:3333/&set DEBUG=note-app:*&npm run bin",
+    "start-mongodb": "set REQUEST_LOG_FORMAT=common&set REQUEST_LOG_FILE=access.log&set NOTES_MODEL=MONGO_DB&set MONGO_URL=mongodb://localhost/chap07&set DEBUG=note-app:*&npm run bin",
+    "debug": "set REQUEST_LOG_FORMAT=common&&set REQUEST_LOG_FILE=access.log&&set NOTES_MODEL=models/note/snpmtorage/notes-fs&&set DEBUG=note-app:* & npm run bin",
+    "enable-file-logging": "set REQUEST_LOG_FORMAT=common&&set REQUEST_LOG_FILE=access.log",
+    "on-server": "./start.sh"
   },
   "dependencies": {
     "body-parser": "~1.17.1",

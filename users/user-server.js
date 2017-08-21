@@ -135,13 +135,18 @@ server.listen(process.env.PORT || '3333', function () {
     log(server.name + ' listening at ' + server.url);
 });
 
+server.listen(process.env.PORT, process.env.REST_LISTEN ? process.env.REST_LISTEN : "localhost",
+    () => {
+    log(server.name + ' listening at ' + server.url);
+    });
+
 function check(req, res, next) {
     if (req.authorization) {
         config.getUsers()
             .then(users =>
                 users.some(user =>
-                    user.key == req.authorization.basic.password &&
-                    user.name == req.authorization.basic.username)
+                    user.key === req.authorization.basic.password &&
+                    user.name === req.authorization.basic.username)
             )
             .then(isAuthenticated => {
                 if (isAuthenticated) next();

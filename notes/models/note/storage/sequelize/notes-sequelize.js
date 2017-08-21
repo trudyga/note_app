@@ -7,7 +7,6 @@ const log = require('debug')('notes:sequelize-model');
 const error = require('debug')('notes:error');
 const Note = require('../../Note');
 
-exports.events = require('../../note-events');
 
 exports.connectDb = function () {
     let SQNote;
@@ -125,3 +124,5 @@ exports.count = function () {
         });
     });
 };
+
+exports.events = require('../../note-events');

@@ -52,6 +52,8 @@ module.exports.socketio = function (io) {
         });
     };
 
+    console.dir(notes);
+
     notes.events.on('notecreated', emitNoteTitles);
     notes.events.on('noteupdate', emitNoteTitles);
     notes.events.on('notedestroy', emitNoteTitles);

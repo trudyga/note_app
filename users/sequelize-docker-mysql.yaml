@@ -2,6 +2,6 @@ dbname: userauth
 username: userauth
 password: userauth
 params:
-  dialect: mysql
-  host: localhost
+  host: db-auth
   port: 3306
+  dialect: mysql

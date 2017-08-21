@@ -4,10 +4,14 @@ const util = require('util');
 const config = require('../config');
 const restify = require('restify');
 
+let hostname = process.env.REST_LISTEN ? process.env.REST_LISTEN : 'localhost';
+
 let client = restify.createJsonClient({
-    url: 'http://localhost:'+process.env.PORT || '3333',
+    url: `http://${hostname}:${process.env.PORT || '3333'}`,
     version: '*'
 });
+
+console.log("End point: " + util.inspect(client.url));
 
 
 config.getUser('users-admin', '../config/api-config.yaml')

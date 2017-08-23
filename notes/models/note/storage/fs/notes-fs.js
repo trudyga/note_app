@@ -8,7 +8,7 @@ const log = require('debug')('notes:fs-model');
 
 const Note = require('../../Note');
 
-module.exports.update = module.exports.create = function(key, title, body) {
+module.exports.create = function(key, title, body) {
     return notesDir().then(notesdir => {
         if (key.indexOf('/') >= 0)
             throw new Error(`Key ${key} cannot contain '/'`);
@@ -22,7 +22,16 @@ module.exports.update = module.exports.create = function(key, title, body) {
                else resolve(note);
            });
         });
-    })
+    });
+};
+
+module.exports.update = function (key, title, body) {
+    return exports.keylist().then(keys => {
+        if (keys.every(k => k !== key))
+            throw Error(`Note ${key} doesn't exist`);
+        else
+            return exports.create(key, title, body);
+    });
 };
 
 module.exports.read = function(key) {

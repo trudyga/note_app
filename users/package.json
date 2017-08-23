@@ -7,7 +7,8 @@
     "on-server": "./start.sh",
     "docker": "node user-server.js",
     "start": "set PORT=3333& SEQUELIZE_CONNECT=sequelize-mysql.yaml&set API_CONFIG=config/api-config.yaml&set DEBUG=users:*& node user-server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "test-docker": "mocha -R json userauth-test/test.js > /reports/userauth.json"
   },
   "repository": {
     "type": "git",

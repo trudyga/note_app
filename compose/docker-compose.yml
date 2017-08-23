@@ -11,6 +11,12 @@ services:
   userauth:
     build: ../users
     container_name: userauth
+    environment:
+       DEBUG: "users:*"
+       PORT: "3333"
+       SEQUELIZE_CONNECT: "sequelize-docker-mysql.yaml"
+       REST_LISTEN: "0.0.0.0"
+       API_CONFIG: config/api-config.yaml
     networks:
       - authnet
       - notesauth
@@ -42,6 +48,16 @@ services:
       - db-notes
       - userauth
     restart: always
+    environment:
+      NODE_ENV: "production"
+      REQUEST_LOG_FORMAT: "common"
+      REQUEST_LOG_FILE: "access.log"
+      NOTES_MODEL: MYSQL
+      SEQUELIZE_CONNECT: models/note/storage/sequelize/sequelize-docker-mysql.yaml
+      USERS_MODEL: models/users-rest
+      USER_SERVICE_URL: http://userauth:3333/
+      DEBUG: "note-app:*, messages:*"
+      NOTES_SESSIONS_DIR: "/sessions"
 
 networks:
   authnet:

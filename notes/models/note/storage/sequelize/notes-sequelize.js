@@ -41,11 +41,21 @@ exports.connectDb = function () {
                   type: Sequelize.TEXT,
                   allowNull: false
               }
+          }, {
+              charset: 'utf8',
+              collate: 'utf8_unicode_ci'
           });
           return SQNote.sync();
       });
 };
 
+/**
+ * Add note entry to database
+ * @param key {String} Key to add only ascii characters
+ * @param title {String} Note's title, only ascii characters
+ * @param body {String} Note's body, only ascii characters
+ * @returns {Promise.<Note>} Return created note instance
+ */
 exports.create = function (key, title, body) {
     return exports.connectDb().then(SQNote => {
         return SQNote.create({

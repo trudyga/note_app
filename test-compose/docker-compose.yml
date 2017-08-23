@@ -1,0 +1,77 @@
+version: '2'
+services:
+  db-auth-test:
+    build: ../db-auth
+    container_name: db-auth-test
+    networks:
+      - authnet-test
+    volumes:
+      - db-auth-data:/var/lib/mysql
+
+  db-notes-test:
+    build: ../db-notes
+    container_name: db-notes-test
+    networks:
+      - frontnet-test
+    volumes:
+      - db-notes-data:/var/lib/mysql
+
+  userauth-test:
+    build: ../users
+    container_name: userauth-test
+    environment:
+       DEBUG: ""
+       NODE_ENV: "test"
+       SEQUELIZE_CONNECT: "userauth-test/sequelize-docker-mysql.yaml"
+       HOST_USERS_TEST: "localhost"
+       PORT: "3333"
+       REST_LISTEN: "0.0.0.0"
+       API_CONFIG: config/api-config.yaml
+    networks:
+      - authnet-test
+      - notesauth-test
+    volumes:
+      - ./reports-userauth:/reports
+      - ./userauth:/usr/src/app/userauth-test
+    expose:
+      - 3333
+    depends_on:
+      - db-auth-test
+    restart: always
+
+
+  notesapp-test:
+    build: ../notes
+    container_name: notesapp-test
+    networks:
+      - frontnet-test
+      - notesauth-test
+    depends_on:
+      - db-notes-test
+      - userauth-test
+    restart: always
+    environment:
+      DEBUG: ""
+      NODE_ENV: "test"
+      SEQUELIZE_CONNECT: "notesmodel-test/sequelize-docker-mysql.yaml"
+      USER_SERVICE_URL: http://userauth-test:3333/
+      REQUEST_LOG_FORMAT: "common"
+      REQUEST_LOG_FILE: "access.log"
+      NOTES_MODEL: MYSQL
+      USERS_MODEL: models/users-rest
+      NOTES_SESSIONS_DIR: "/sessions"
+    volumes:
+      - ./reports-notes:/reports
+      - ./notesmodel:/usr/src/app/notesmodel-test
+
+networks:
+  authnet-test:
+    driver: bridge
+  frontnet-test:
+    driver: bridge
+  notesauth-test:
+    driver: bridge
+
+volumes:
+  db-auth-data:
+  db-notes-data:

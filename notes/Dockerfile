@@ -1,13 +1,5 @@
 FROM node:8.4
 
-ENV REQUEST_LOG_FORMAT="common"
-ENV REQUEST_LOG_FILE="access.log"
-ENV NOTES_MODEL=MYSQL
-ENV SEQUELIZE_CONNECT=models/note/storage/sequelize/sequelize-docker-mysql.yaml
-ENV USERS_MODEL=models/users-rest
-ENV USER_SERVICE_URL=http://userauth:3333/
-ENV DEBUG="note-app:*, messages:*"
-ENV NOTES_SESSIONS_DIR="/sessions"
 
 
 RUN mkdir -p /usr/src/app

@@ -21,7 +21,7 @@ Thus docker, docker-compose, docker-machine must be installed.</p>
 To deploy project:
 <ol>
   <li>cd compose/</li>
-  <li>docker compose up --build</li>
+  <li>docker-compose up --build</li>
   <li>enjoy</li>
 </ol>
 
